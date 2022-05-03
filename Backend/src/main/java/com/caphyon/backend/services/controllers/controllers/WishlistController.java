@@ -53,4 +53,21 @@ public class WishlistController {
                     .build();
         }
     }
+
+    @PostMapping("deletewishlist")
+    public ResponseEntity<ApiResponse> deleteWishlist(@RequestBody WishlistDto wishlistDto) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Responded", "WishlistController::deleteWishlist");
+
+        try {
+            wishlistService.deleteWishlist(wishlistDto);
+            return new ApiResponseBuilder<>(HttpStatus.OK.value(), "Successfully deleted wishlist")
+                    .withHttpHeader(httpHeaders)
+                    .build();
+        } catch (Exception ex) {
+            return new ApiResponseBuilder<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage())
+                    .withHttpHeader(httpHeaders)
+                    .build();
+        }
+    }
 }

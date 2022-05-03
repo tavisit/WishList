@@ -6,8 +6,10 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import LocalStorageHelper from '../common/localStorageMethods'
-import { CardActionArea, Button } from '@mui/material'
+import { Button } from '@mui/material'
+import config from '../config.json'
 
+const API_GET_USER = config.apiRoot
 function WishlistCard (item) {
   let navigate = useNavigate()
 
@@ -40,6 +42,29 @@ function WishlistCard (item) {
     navigate('/wishlist/' + item.id)
   }
 
+  const handleDelete = event => {
+    event.preventDefault()
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        mode: 'no-cors',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(item)
+    }
+
+    fetch(API_GET_USER + 'wishlists/deletewishlist', requestOptions)
+      .then(response => response.json())
+      .then(response => {
+        if (response.httpStatusCode !== 200) throw new Error(response.message)
+        window.location.reload()
+      })
+
+    window.location.reload()
+  }
+
   return (
     <Card sx={{ width: 0.4, marginTop: 5 }}>
       <CardContent>
@@ -57,7 +82,7 @@ function WishlistCard (item) {
           Go to wishlist
         </Button>
         <Button
-          onClick={handleClick}
+          onClick={handleDelete}
           style={{ backgroundColor: 'burlywood' }}
           sx={{ width: 0.5, marginTop: 5 }}
         >

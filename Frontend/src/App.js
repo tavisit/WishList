@@ -19,7 +19,7 @@ function App () {
         <Route path='/register' element={<Register />} />
         <Route path='/main' element={<MainPage />} />
         <Route path='/wishlist/*' element={<Wishlist />} />
-        <Route path='/**' exact element={<Navigate replace to='/login' />} />
+        <Route path='*' exact element={<Navigate replace to='/login' />} />
       </Routes>
     </Router>
   )

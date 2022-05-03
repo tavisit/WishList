@@ -2,7 +2,10 @@ package com.caphyon.backend.services.controllers.services;
 
 import com.caphyon.backend.data.dtos.UserTableDto;
 import com.caphyon.backend.data.dtos.WishlistDto;
+import com.caphyon.backend.data.entities.ItemUserPair;
 import com.caphyon.backend.data.entities.Wishlist;
+import com.caphyon.backend.data.repositories.ItemTableRepository;
+import com.caphyon.backend.data.repositories.ItemUserPairRepository;
 import com.caphyon.backend.data.repositories.WishlistRepository;
 import com.caphyon.backend.mappers.MapStructMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,12 @@ public class WishlistService {
     @Autowired
     private WishlistRepository wishlistRepository;
 
+    @Autowired
+    private ItemUserPairRepository itemUserPairRepository;
+
+    @Autowired
+    private ItemTableRepository itemTableRepository;
+
     public List<WishlistDto> getAllByUserid(Integer id){
         List<Wishlist> wishlistList = wishlistRepository.findAllByUserId(id);
         MapStructMapperImpl mapStructMapper = new MapStructMapperImpl();
@@ -38,5 +47,16 @@ public class WishlistService {
         wishlistDto.setUser(userService.findUserById(userId));
         MapStructMapperImpl mapStructMapper = new MapStructMapperImpl();
         wishlistRepository.save(mapStructMapper.wishlistDtoToWishlist(wishlistDto));
+    }
+
+    public void deleteWishlist(WishlistDto wishlistDto) {
+
+        List<ItemUserPair> itemUserPairs = itemUserPairRepository.findAllByWishlistId(wishlistDto.getId());
+        itemUserPairs.forEach(itemUserPair -> {
+            itemTableRepository.deleteById(itemUserPair.getProduct().getId());
+        });
+
+        MapStructMapperImpl mapStructMapper = new MapStructMapperImpl();
+        wishlistRepository.delete(mapStructMapper.wishlistDtoToWishlist(wishlistDto));
     }
 }
