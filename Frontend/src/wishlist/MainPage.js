@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import Divider from '@mui/material/Divider'
-import { Card, CardActions, Button } from '@mui/material'
+import { Card, CardActions, Button, Box, TextField } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 
 import NavBar from '../TopBottomComponents/NavBar'
@@ -18,7 +18,7 @@ const API_GET_USER = config.apiRoot
 export default function MainPage () {
   const [wishlist, setWishlist] = React.useState([])
   const [open, setOpen] = React.useState(null)
-  const [openList, setOpenList] = React.useState(null)
+  const [name, setName] = React.useState('')
 
   React.useEffect(() => {
     localStorage.removeItem('item')
@@ -29,20 +29,56 @@ export default function MainPage () {
         Accept: 'application/json'
       }
     }
-    fetch(
-      API_GET_USER + 'wishlists/getall/' + LocalStorageHelper.getUser().id,
-      requestOptions
-    )
+    var pathToSend = API_GET_USER + 'wishlists/'
+    if (name == '') {
+      pathToSend += 'getall/' + LocalStorageHelper.getUser().id
+    } else {
+      pathToSend += 'getsearch/' + LocalStorageHelper.getUser().id + '/' + name
+    }
+
+    fetch(pathToSend, requestOptions)
       .then(response => response.json())
       .then(response => {
         if (response.httpStatusCode !== 200) throw new Error(response.message)
         setWishlist(response.data)
       })
       .catch(err => {})
-  }, [])
+  }, [name])
 
   const handleClick = () => {
     setOpen(true)
+  }
+
+  const handleSubmitSearch = event => {
+    if (event == null) {
+      setName('')
+    } else {
+      event.preventDefault()
+      const formData = new FormData(event.currentTarget)
+      setName(formData.get('name'))
+    }
+
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    }
+    var pathToSend = API_GET_USER + 'wishlists/'
+    if (name == '') {
+      pathToSend += 'getall/' + LocalStorageHelper.getUser().id
+    } else {
+      pathToSend += 'getsearch/' + LocalStorageHelper.getUser().id + '/' + name
+    }
+
+    fetch(pathToSend, requestOptions)
+      .then(response => response.json())
+      .then(response => {
+        if (response.httpStatusCode !== 200) throw new Error(response.message)
+        setWishlist(response.data)
+      })
+      .catch(err => {})
   }
 
   return (
@@ -64,6 +100,29 @@ export default function MainPage () {
             </Button>
           </CardActions>
         </Card>
+        <h2>Filters</h2>
+        <Divider />
+        <Box
+          sx={{
+            minWidth: 345,
+            marginRight: '10%',
+            marginLeft: '10%',
+            marginTop: 5
+          }}
+          component='form'
+          noValidate
+          onChange={event => handleSubmitSearch(event)}
+        >
+          <TextField
+            margin='normal'
+            fullWidth
+            id='name'
+            label='name'
+            name='name'
+            autoComplete='name'
+            autoFocus
+          />
+        </Box>
         <Divider />
         <h2>My Wishlists</h2>{' '}
         {wishlist.map(wish => (
@@ -72,9 +131,6 @@ export default function MainPage () {
             id={wish.id}
             name={wish.name}
             creation={wish.creation}
-            handleClose={() => {
-              setOpenList(false)
-            }}
           />
         ))}
       </div>

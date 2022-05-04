@@ -37,6 +37,24 @@ public class WishlistController {
         }
     }
 
+    @GetMapping("/getsearch/{userId}/{name}")
+    public ResponseEntity<ApiResponse> getAllWishlistsByPartialName(@PathVariable("userId") Integer userId,@PathVariable("name") String partialName) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Responded", "WishlistController::getAllWishlistsByPartialName");
+
+        try {
+            List<WishlistDto> wishlistDtoList = wishlistService.getAllByUseridAndPartialName(userId,partialName);
+            return new ApiResponseBuilder<>(HttpStatus.OK.value(), "Successfully retrieved all wishlists by "+ userId + " with partial name of " + partialName)
+                    .withHttpHeader(httpHeaders)
+                    .withData(wishlistDtoList)
+                    .build();
+        } catch (Exception ex) {
+            return new ApiResponseBuilder<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage())
+                    .withHttpHeader(httpHeaders)
+                    .build();
+        }
+    }
+
     @PostMapping("addWishlist/{userId}")
     public ResponseEntity<ApiResponse> submitNewWishList(@PathVariable Integer userId,@RequestBody WishlistDto wishlistDto) {
         HttpHeaders httpHeaders = new HttpHeaders();

@@ -11,4 +11,7 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Integer> {
 
     @Query("select wish from Wishlist wish where wish.user.id=:id")
     List<Wishlist> findAllByUserId(Integer id);
+
+    @Query("select wish from Wishlist wish where wish.user.id=:id and wish.name like %:name%")
+    List<Wishlist> findAllByUserIdAndPartialName(Integer id,String name);
 }

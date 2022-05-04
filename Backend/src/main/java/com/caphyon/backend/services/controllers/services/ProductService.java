@@ -29,6 +29,17 @@ public class ProductService {
         return mapStructMapper.listItemTableToItemtableDto(itemTableList);
     }
 
+    public List<ItemTableDto> getAllByPartialNameAndDescription(Integer listId, String name,String description) {
+        if(name.equals("null")) name = "NotAWord";
+        if(description.equals("null")) description = "NotAWord";
+
+        List<ItemUserPair> itemUserPairs =itemUserPairRepository.findAllByPartialNameAndDescription(listId,name,description);
+        List<ItemTable> itemTableList = new ArrayList<>();
+        itemUserPairs.forEach(itemUserPair -> itemTableList.add(itemUserPair.getProduct()));
+        MapStructMapperImpl mapStructMapper = new MapStructMapperImpl();
+        return mapStructMapper.listItemTableToItemtableDto(itemTableList);
+    }
+
     public void updateItem(ItemTableDto itemTable) {
         MapStructMapperImpl mapStructMapper = new MapStructMapperImpl();
         itemTableRepository.save(mapStructMapper.itemTableDtoToItemtable(itemTable));

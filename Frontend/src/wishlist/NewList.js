@@ -2,9 +2,7 @@ import * as React from 'react'
 
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Box, TextField } from '@mui/material'
 import config from '../config.json'
@@ -13,7 +11,6 @@ import SimpleError from '../pop_messages/SimpleError'
 const API_GET_USER = config.apiRoot
 
 function NewList (props) {
-  const [insert, setInsert] = React.useState([])
   const [open, setOpen] = React.useState([])
 
   React.useEffect(() => {})
@@ -42,7 +39,6 @@ function NewList (props) {
       .then(response => response.json())
       .then(response => {
         if (response.httpStatusCode !== 200) throw new Error(response.message)
-        setInsert(true)
         window.location.reload()
       })
       .catch(err => {
@@ -58,14 +54,6 @@ function NewList (props) {
         title={'The wishlist was not added!'}
         handleClose={() => {
           setOpen(false)
-        }}
-      />
-      <SimpleError
-        id='post-food-info-info'
-        open={insert}
-        title={'The wishlist was added!'}
-        handleClose={() => {
-          setInsert(false)
         }}
       />
       <Dialog

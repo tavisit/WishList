@@ -22,7 +22,7 @@ public class ItemTable {
     @Column(name = "name", nullable = false, length = 1024)
     private String name;
 
-    @Column(name = "description", nullable = false, length = 1024)
+    @Column(name = "description", nullable = false, length = 4096)
     private String description;
 
     @Column(name = "image_url", nullable = false, length = 1024)

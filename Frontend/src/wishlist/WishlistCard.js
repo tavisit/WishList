@@ -66,7 +66,14 @@ function WishlistCard (item) {
   }
 
   return (
-    <Card sx={{ width: 0.4, marginTop: 5 }}>
+    <Card
+      sx={{
+        minWidth: 345,
+        marginRight: '10%',
+        marginLeft: '10%',
+        marginTop: 5
+      }}
+    >
       <CardContent>
         <Typography gutterBottom variant='h5' component='div'>
           Wishlist name: {item.name}

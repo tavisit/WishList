@@ -22,9 +22,9 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/getall/{listId}")
-    public ResponseEntity<ApiResponse> getAllWishlists(@PathVariable Integer listId) {
+    public ResponseEntity<ApiResponse> getAllItemsFromWishlist(@PathVariable Integer listId) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Responded", "WishlistController::getAllWishlists");
+        httpHeaders.add("Responded", "WishlistController::getAllItemsFromWishlist");
 
         try {
             List<ItemTableDto> itemTableDtoList = productService.getAllByListid(listId);
@@ -32,6 +32,26 @@ public class ProductController {
                     .withHttpHeader(httpHeaders)
                     .withData(itemTableDtoList)
                         .build();
+        } catch (Exception ex) {
+            return new ApiResponseBuilder<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage())
+                    .withHttpHeader(httpHeaders)
+                    .build();
+        }
+    }
+
+    @GetMapping("/getSearch/{listId}/{partialName}/{partialDescription}")
+    public ResponseEntity<ApiResponse> getAllItemsFromWishlistFromSearch(@PathVariable("listId") Integer listId,
+                                                                         @PathVariable("partialName") String partialName,
+                                                                         @PathVariable("partialDescription") String partialDescription) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Responded", "WishlistController::getAllWishlists");
+
+        try {
+            List<ItemTableDto> itemTableDtoList = productService.getAllByPartialNameAndDescription(listId, partialName, partialDescription);
+            return new ApiResponseBuilder<>(HttpStatus.OK.value(), "Successfully retrieved all products by "+ listId)
+                    .withHttpHeader(httpHeaders)
+                    .withData(itemTableDtoList)
+                    .build();
         } catch (Exception ex) {
             return new ApiResponseBuilder<>(HttpStatus.BAD_REQUEST.value(), ex.getMessage())
                     .withHttpHeader(httpHeaders)

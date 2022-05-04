@@ -80,16 +80,22 @@ function WishlistCard (item) {
 
   return (
     <Card
-      sx={{ width: 0.4, marginTop: 5, gap: 2 }}
+      sx={{
+        minWidth: 345,
+        marginRight: '10%',
+        marginLeft: '10%',
+        marginTop: 5
+      }}
       style={{ backgroundColor: item.color }}
     >
       <CardContent>
-        <CardMedia component='img' height='140' image={item.imageUrl} />
+        <CardMedia component='img' height='240' image={item.imageUrl} />
         <Typography gutterBottom variant='h5' component='div'>
-          Name: {item.name}
+          <h4>Name:</h4> {item.name}
         </Typography>
         <Typography gutterBottom variant='h5' component='div'>
-          Description: {item.description}
+          <h4>Description:</h4>
+          {item.description}
         </Typography>
         <CardActionArea
           style={{ backgroundColor: 'ghostwhite' }}

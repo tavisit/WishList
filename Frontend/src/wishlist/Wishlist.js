@@ -4,20 +4,60 @@ import Divider from '@mui/material/Divider'
 
 import NavBar from '../TopBottomComponents/NavBar'
 import config from '../config.json'
-import LocalStorageHelper from '../common/localStorageMethods'
 import { Box, TextField, Button } from '@mui/material'
 import Footer from '../TopBottomComponents/Footer'
 import ItemList from './ItemList'
+import SimpleError from '../pop_messages/SimpleError'
 
 const API_GET_USER = config.apiRoot
 
 export default function Wishlist () {
-  const [itemId, setItemId] = React.useState(0)
   const [items, setItems] = React.useState([])
+  const [openError, setOpenError] = React.useState(false)
+  const [name, setName] = React.useState('')
+  const [description, setDescription] = React.useState('')
 
   React.useEffect(() => {
-    var user = LocalStorageHelper.getUser()
-    setItemId(localStorage.getItem('item'))
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    }
+
+    var pathToSend = API_GET_USER + 'items/'
+    if (name == '' && description == '') {
+      pathToSend += 'getall/' + localStorage.getItem('itemId')
+    } else {
+      var sendName = name
+      var sendDescription = description
+      if (name == '') sendName = 'null'
+      if (description == '') sendDescription = 'null'
+      pathToSend +=
+        'getSearch/' +
+        localStorage.getItem('itemId') +
+        '/' +
+        sendName +
+        '/' +
+        sendDescription
+    }
+
+    fetch(pathToSend, requestOptions)
+      .then(response => response.json())
+      .then(response => {
+        if (response.httpStatusCode !== 200) throw new Error(response.message)
+        setItems(response.data)
+      })
+      .catch(err => {})
+  }, [name, description])
+
+  const handleSubmitSearch = event => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+
+    setName(formData.get('name'))
+    setDescription(formData.get('description'))
 
     const requestOptions = {
       method: 'GET',
@@ -26,46 +66,84 @@ export default function Wishlist () {
         Accept: 'application/json'
       }
     }
-    fetch(
-      API_GET_USER + 'items/getall/' + localStorage.getItem('itemId'),
-      requestOptions
-    )
+
+    var pathToSend = API_GET_USER + 'items/'
+    if (name == '' && description == '') {
+      pathToSend += 'getall/' + localStorage.getItem('itemId')
+    } else {
+      var sendName = name
+      var sendDescription = description
+      if (name == '') sendName = 'null'
+      if (description == '') sendDescription = 'null'
+      pathToSend +=
+        'getSearch/' +
+        localStorage.getItem('itemId') +
+        '/' +
+        sendName +
+        '/' +
+        sendDescription
+    }
+
+    fetch(pathToSend, requestOptions)
       .then(response => response.json())
       .then(response => {
         if (response.httpStatusCode !== 200) throw new Error(response.message)
         setItems(response.data)
       })
       .catch(err => {})
-  }, [])
-
-  const handleSubmitSearch = event => {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-
-    const data = {
-      name: formData.get('name'),
-      description: formData.get('description')
-    }
   }
 
   const handleNewItem = event => {
     event.preventDefault()
+    window.alert('The item is processed, please wait', 1)
     const formData = new FormData(event.currentTarget)
 
     const data = {
-      url: formData.get('url')
+      url: formData.get('url'),
+      wishlistId: localStorage.getItem('itemId')
     }
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        mode: 'no-cors',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(data)
+    }
+    fetch(API_GET_USER + 'scraping', requestOptions)
+      .then(response => response.json())
+      .then(response => {
+        if (response.httpStatusCode !== 200) throw new Error(response.message)
+        window.alert('The item was processed')
+        window.location.reload()
+      })
+      .catch(err => {
+        setOpenError(true)
+      })
   }
   return (
     <>
       <NavBar />
+      <SimpleError
+        id='get-restaurant-info-error'
+        open={openError}
+        title={'Cannot add the item!'}
+        handleClose={() => {
+          setOpenError(false)
+        }}
+      />
       <div className='container'>
         <h2>My items from the list {localStorage.getItem('itemName')}</h2>
         <Divider />
-        <h2>New Item</h2>
-
+        <h2>New Item from amazon.com and emag.ro</h2>
         <Box
-          sx={{ width: 0.4, marginTop: 5, gap: 2 }}
+          sx={{
+            minWidth: 345,
+            marginRight: '10%',
+            marginLeft: '10%',
+            marginTop: 5
+          }}
           component='form'
           noValidate
           onSubmit={handleNewItem}
@@ -93,10 +171,15 @@ export default function Wishlist () {
 
         <h2>Filters</h2>
         <Box
-          sx={{ width: 0.4, marginTop: 5, gap: 2 }}
+          sx={{
+            minWidth: 345,
+            marginRight: '10%',
+            marginLeft: '10%',
+            marginTop: 5
+          }}
           component='form'
           noValidate
-          onSubmit={handleSubmitSearch}
+          onChange={event => handleSubmitSearch(event)}
         >
           <TextField
             margin='normal'
@@ -116,14 +199,6 @@ export default function Wishlist () {
             autoComplete='description'
             autoFocus
           />
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Search by filters
-          </Button>
         </Box>
         <Divider />
         {items.length ? (
@@ -147,7 +222,7 @@ export default function Wishlist () {
             </div>
             <Divider />
             <h2>Bought items</h2>
-            <div className='flex-row' sx={{ mt: 3 }}>
+            <div className='flex-row'>
               {items
                 .filter(item => item.bought == '1')
                 .map(item => (

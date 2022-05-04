@@ -11,4 +11,10 @@ public interface ItemUserPairRepository extends JpaRepository<ItemUserPair, Inte
 
     @Query("select items from ItemUserPair items where items.list.id=:listId")
     List<ItemUserPair> findAllByWishlistId(Integer listId);
+
+    @Query("SELECT itemPair from ItemUserPair itemPair where " +
+            "itemPair.list.id=:listId and " +
+            "(itemPair.product.name like %:name% or itemPair.product.description like %:description%)")
+    List<ItemUserPair> findAllByPartialNameAndDescription(Integer listId,String name, String description);
+
 }

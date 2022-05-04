@@ -41,6 +41,16 @@ public class WishlistService {
         return mapStructMapper.listWishListToWishListDto(new ArrayList<>(sorted));
     }
 
+    public List<WishlistDto> getAllByUseridAndPartialName(Integer id,String partialName){
+        List<Wishlist> wishlistList = wishlistRepository.findAllByUserIdAndPartialName(id,partialName);
+        MapStructMapperImpl mapStructMapper = new MapStructMapperImpl();
+        Comparator<Wishlist> instantComparator = Comparator
+                .comparing(Wishlist::getCreation);
+        SortedSet<Wishlist> sorted = new TreeSet<>(instantComparator.reversed());
+        sorted.addAll(wishlistList);
+        return mapStructMapper.listWishListToWishListDto(new ArrayList<>(sorted));
+    }
+
     public void insertWishlist(Integer userId, WishlistDto wishlistDto){
         Instant instant = Instant.now();
         wishlistDto.setCreation(instant);
