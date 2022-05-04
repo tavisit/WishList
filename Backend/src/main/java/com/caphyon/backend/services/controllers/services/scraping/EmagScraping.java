@@ -24,27 +24,24 @@ public class EmagScraping implements ScrapingInterface{
                 getElementsByClass("main-container-outer").get(0).
                 getElementsByClass("main-container-inner").get(0).
                 getElementsByClass("main-container").get(0);
+
         if (content == null) {
             throw new Exception("Not able to fetch document");
         }
+
         ItemTableDto itemTableDto = new ItemTableDto();
         Elements children = content.children();
         itemTableDto.setName(extractProductName(children));
         itemTableDto.setDescription(extractProductDescription(children));
-
-        Element contentPhoto = doc.getElementById("leftCol");
-        if (content == null) {
-            throw new Exception("Not able to fetch document");
-        }
         itemTableDto.setImageUrl(extractProductImage(children));
         itemTableDto.setUrlProduct(url);
         itemTableDto.setBought("0");
+
         return itemTableDto;
     }
 
     public Document getDocument(String url) throws IOException {
-        Document doc = Jsoup.connect(url).userAgent("Chrome").timeout(5000).get();
-        return doc;
+        return Jsoup.connect(url).userAgent("Chrome").timeout(5000).get();
     }
 
     public String extractProductName(Elements children) {

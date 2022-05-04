@@ -24,9 +24,7 @@ public class AmazonScraping implements ScrapingInterface{
             }
         }
 
-        ItemTableDto itemTableDto = getProductDetailsById(split[idIndex]);
-
-        return itemTableDto;
+        return getProductDetailsById(split[idIndex]);
     }
 
     public ItemTableDto getProductDetailsById(String id) throws Exception {
@@ -57,8 +55,7 @@ public class AmazonScraping implements ScrapingInterface{
     }
 
     public Document getDocument(String url) throws IOException {
-        Document doc = Jsoup.connect(url).userAgent("Chrome").timeout(5000).get();
-        return doc;
+        return Jsoup.connect(url).userAgent("Chrome").timeout(5000).get();
     }
 
     public String extractProductName(Elements children) {

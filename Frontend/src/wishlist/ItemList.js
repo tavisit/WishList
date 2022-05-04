@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent'
 import LocalStorageHelper from '../common/localStorageMethods'
 import { CardActionArea, CardMedia, Divider } from '@mui/material'
 import config from '../config.json'
+import { grey, red } from '@mui/material/colors'
 
 const API_GET_USER = config.apiRoot
 
@@ -81,23 +82,54 @@ function WishlistCard (item) {
   return (
     <Card
       sx={{
-        minWidth: 345,
-        marginRight: '10%',
-        marginLeft: '10%',
-        marginTop: 5
+        maxWidth: '48%',
+        marginRight: '1%',
+        marginTop: 5,
+        backgroundColor: item.color
       }}
-      style={{ backgroundColor: item.color }}
     >
       <CardContent>
-        <CardMedia component='img' height='240' image={item.imageUrl} />
-        <Typography gutterBottom variant='h5' component='div'>
+        <CardMedia
+          sx={{
+            width: '100%',
+            height: '500px',
+            border: 5,
+            marginTop: 5
+          }}
+          component='img'
+          image={item.imageUrl}
+        />
+        <Typography
+          sx={{
+            width: '100%',
+            border: 1,
+            marginTop: 5
+          }}
+          gutterBottom
+          variant='h5'
+          component='div'
+        >
           <h4>Name:</h4> {item.name}
         </Typography>
-        <Typography gutterBottom variant='h5' component='div'>
+        <Typography
+          sx={{
+            width: '100%',
+            border: 1,
+            marginTop: 5
+          }}
+          variant='h5'
+          component='div'
+        >
           <h4>Description:</h4>
           {item.description}
         </Typography>
         <CardActionArea
+          sx={{
+            width: '100%',
+            border: 1,
+            marginTop: 5
+          }}
+          alignCenter
           style={{ backgroundColor: 'ghostwhite' }}
           rel='noopener noreferrer'
           href={
@@ -107,27 +139,37 @@ function WishlistCard (item) {
           }
           target='_blank'
         >
-          <Typography gutterBottom variant='h5' component='div'>
-            Url: {item.urlProduct}
+          <Typography variant='h4' component='div'>
+            Link to the product
           </Typography>
         </CardActionArea>
         <Divider />
 
         <br />
         <CardActionArea
+          sx={{
+            width: '100%',
+            border: 1,
+            marginTop: 5
+          }}
           onClick={handleClick}
           style={{ backgroundColor: 'ghostwhite' }}
         >
-          <Typography gutterBottom variant='h5' component='div'>
+          <Typography gutterBottom variant='h4' component='div'>
             Change status
           </Typography>
         </CardActionArea>
         <br />
         <CardActionArea
+          sx={{
+            width: '100%',
+            border: 1,
+            marginTop: 5,
+            backgroundColor: red[300]
+          }}
           onClick={handleDelete}
-          style={{ backgroundColor: 'red' }}
         >
-          <Typography gutterBottom variant='h5' component='div'>
+          <Typography gutterBottom variant='h4' component='div'>
             Delete
           </Typography>
         </CardActionArea>

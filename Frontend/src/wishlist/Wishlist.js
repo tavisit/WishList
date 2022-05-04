@@ -8,7 +8,8 @@ import { Box, TextField, Button } from '@mui/material'
 import Footer from '../TopBottomComponents/Footer'
 import ItemList from './ItemList'
 import SimpleError from '../pop_messages/SimpleError'
-
+import './Wishlist.css'
+import { purple, red } from '@mui/material/colors'
 const API_GET_USER = config.apiRoot
 
 export default function Wishlist () {
@@ -134,14 +135,15 @@ export default function Wishlist () {
         }}
       />
       <div className='container'>
-        <h2>My items from the list {localStorage.getItem('itemName')}</h2>
+        <h2>My items from the list </h2>
+        <h2>{localStorage.getItem('itemName')}</h2>
         <Divider />
         <h2>New Item from amazon.com and emag.ro</h2>
         <Box
           sx={{
-            minWidth: 345,
-            marginRight: '10%',
-            marginLeft: '10%',
+            maxwidth: '30%',
+            marginLeft: 10,
+            marginRight: 10,
             marginTop: 5
           }}
           component='form'
@@ -172,9 +174,9 @@ export default function Wishlist () {
         <h2>Filters</h2>
         <Box
           sx={{
-            minWidth: 345,
-            marginRight: '10%',
-            marginLeft: '10%',
+            maxwidth: '30%',
+            marginLeft: 10,
+            marginRight: 10,
             marginTop: 5
           }}
           component='form'
@@ -201,10 +203,10 @@ export default function Wishlist () {
           />
         </Box>
         <Divider />
-        {items.length ? (
-          <>
-            <h2>To be bought items</h2>
-            <div className='flex-row'>
+        <div className='flex-row'>
+          {items.length ? (
+            <>
+              <h2>To be bought items</h2>
               {items
                 .filter(item => item.bought == '0')
                 .map(item => (
@@ -216,13 +218,12 @@ export default function Wishlist () {
                     bought={item.bought}
                     urlProduct={item.urlProduct}
                     imageUrl={item.imageUrl}
-                    color='floralwhite'
+                    color={purple[50]}
                   />
                 ))}
-            </div>
-            <Divider />
-            <h2>Bought items</h2>
-            <div className='flex-row'>
+              <Divider />
+              <h2>Bought items</h2>
+              <Divider />
               {items
                 .filter(item => item.bought == '1')
                 .map(item => (
@@ -234,14 +235,14 @@ export default function Wishlist () {
                     bought={item.bought}
                     urlProduct={item.urlProduct}
                     imageUrl={item.imageUrl}
-                    color='burlywood'
+                    color={red[200]}
                   />
                 ))}
-            </div>
-          </>
-        ) : (
-          <h3>There are no items.</h3>
-        )}
+            </>
+          ) : (
+            <h3>There are no items.</h3>
+          )}
+        </div>
       </div>
       <Footer />
     </>

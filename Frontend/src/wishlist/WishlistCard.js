@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent'
 import LocalStorageHelper from '../common/localStorageMethods'
 import { Button } from '@mui/material'
 import config from '../config.json'
+import { grey, red } from '@mui/material/colors'
 
 const API_GET_USER = config.apiRoot
 function WishlistCard (item) {
@@ -83,15 +84,13 @@ function WishlistCard (item) {
         </Typography>
         <Button
           onClick={handleClick}
-          style={{ backgroundColor: 'floralwhite' }}
-          sx={{ width: 0.5, marginTop: 5 }}
+          sx={{ width: 0.5, marginTop: 5, backgroundColor: grey[100] }}
         >
           Go to wishlist
         </Button>
         <Button
           onClick={handleDelete}
-          style={{ backgroundColor: 'burlywood' }}
-          sx={{ width: 0.5, marginTop: 5 }}
+          sx={{ width: 0.5, marginTop: 5, backgroundColor: red[100] }}
         >
           Delete wishlist
         </Button>

@@ -12,6 +12,7 @@ import Footer from '../TopBottomComponents/Footer'
 import SimpleError from '../pop_messages/SimpleError'
 import WishlistCard from './WishlistCard'
 import NewList from './NewList'
+import './MainPage.css'
 
 const API_GET_USER = config.apiRoot
 
@@ -93,7 +94,14 @@ export default function MainPage () {
       />
       <NavBar />
       <div className='container'>
-        <Card sx={{ marginRight: 10, marginTop: 5 }}>
+        <Card
+          sx={{
+            minWidth: 345,
+            marginLeft: 10,
+            marginRight: 10,
+            marginTop: 5
+          }}
+        >
           <CardActions onClick={handleClick}>
             <Button size='Big' variant='text' onClick={handleClick} fullWidth>
               Add new wishlist
@@ -101,13 +109,11 @@ export default function MainPage () {
           </CardActions>
         </Card>
         <h2>Filters</h2>
-        <Divider />
         <Box
           sx={{
             minWidth: 345,
-            marginRight: '10%',
-            marginLeft: '10%',
-            marginTop: 5
+            marginLeft: 10,
+            marginRight: 10
           }}
           component='form'
           noValidate
@@ -124,15 +130,17 @@ export default function MainPage () {
           />
         </Box>
         <Divider />
-        <h2>My Wishlists</h2>{' '}
-        {wishlist.map(wish => (
-          <WishlistCard
-            key={wish.id}
-            id={wish.id}
-            name={wish.name}
-            creation={wish.creation}
-          />
-        ))}
+        <h1>My Wishlists</h1>
+        <div className='flex-row'>
+          {wishlist.map(wish => (
+            <WishlistCard
+              key={wish.id}
+              id={wish.id}
+              name={wish.name}
+              creation={wish.creation}
+            />
+          ))}
+        </div>
       </div>
       <Footer />
     </>
